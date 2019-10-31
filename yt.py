@@ -1,3 +1,4 @@
+# Work with Python 3.6
 import discord
 import time
 TOKEN = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
@@ -43,6 +44,28 @@ async def on_message(message):
         await client.send_message(message.author, msg)
         role = discord.utils.get(message.server.roles,name='Verfügbar')
         await client.add_roles(message.author, role)
+    if message.content.startswith('!yt support'):
+        role = discord.utils.get(message.server.roles,name='Supporter')
+        author = message.author
+        channel = message.channel
+        for member in message.server.members:
+            if role in member.roles:
+                msg = 'Supporter, ' + str(author) + ' hat ein Problem'
+                await client.send_message(member, msg)
+        #await client.send_message(message.channel, msg)
+        msg = 'Wir werden dich in kürze kontaktieren'
+        await client.send_message(message.author, msg)
+    if message.content.startswith('!sb pin'):
+        msg = 'Schreibe jetzt deine Nachricht'
+        await client.send_message(message.channel, msg)
+        author = message.author
+        channel = message.channel
+        def check(message):
+            return message.channel == channel and message.author == author
+        msg = await client.wait_for_message(check=check)
+        await client.pin_message(msg)
+        msg = 'Angetackert!'.format(message)
+        await client.send_message(message.channel, msg)
         
 @client.event
 async def on_ready():
